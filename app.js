@@ -1,7 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
-const Book = require('./models/book');
+const bookRoutes = require('./routes/bookRoutes');
+const userRoutes = require('./routes/userRoutes');
 
 mongoose.connect('mongodb+srv://theobrasseurlille:TheoOCRMVG@cluster0.ef0r5zp.mongodb.net/?retryWrites=true&w=majority',
   { useNewUrlParser: true,
@@ -19,26 +20,7 @@ app.use((req, res, next) => {
   next();
 });
 
-app.post('/api/books', (req, res, next) => {
-  delete req.body._id;
-  const book = new Book({
-    ...req.body
-  });
-  book.save()
-    .then(() => res.status(201).json({ message: 'Objet enregistré !'}))
-    .catch(error => res.status(400).json({ error }));
-});
-
-app.get('/api/books/:id', (req, res, next) => {
-  Book.findOne({ _id: req.params.id })
-    .then(books => res.status(200).json(books))
-    .catch(error => res.status(404).json({ error }));
-});
-
-app.use('/api/books', (req, res, next) => {
-  Book.find()
-    .then(book => res.status(200).json(book))
-    .catch(error => res.status(400).json({ error }));
-});
+app.use('/api/books', bookRoutes);
+app.use('/api/auth', userRoutes);
 
 module.exports = app;
