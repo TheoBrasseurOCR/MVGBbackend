@@ -69,7 +69,7 @@ exports.getOneBook = (req, res, next) => {
         });
  };
 
- exports.createRating = (req, res, next) => {
+exports.createRating = (req, res, next) => {
   if (0 <= req.body.rating <= 5) {
     const ratingObject = { ...req.body, grade: req.body.rating };
     delete ratingObject._id;

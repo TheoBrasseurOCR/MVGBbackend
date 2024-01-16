@@ -1,13 +1,26 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const dotenv = require('dotenv'); // Ajoute cette ligne
+const fs = require('fs');
+dotenv.config(); // Charge les variables d'environnement depuis le fichier .env
+
 const app = express();
 const bookRoutes = require('./routes/bookRoutes');
 const userRoutes = require('./routes/userRoutes');
 const path = require('path');
 
-mongoose.connect('mongodb+srv://theobrasseurlille:TheoOCRMVG@cluster0.ef0r5zp.mongodb.net/?retryWrites=true&w=majority',
-  { useNewUrlParser: true,
-    useUnifiedTopology: true })
+dotenv.config();
+
+// Si le fichier .env.local existe, il écrase les valeurs par défaut
+const envLocalPath = '.env.local';
+if (fs.existsSync(envLocalPath)) {
+  dotenv.config({ path: envLocalPath });
+}
+
+mongoose.connect(process.env.MONGO_DB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch(() => console.log('Connexion à MongoDB échouée !'));
   
