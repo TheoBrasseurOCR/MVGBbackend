@@ -5,8 +5,8 @@ const fs = require('fs');
 dotenv.config(); // Charge les variables d'environnement depuis le fichier .env
 
 const app = express();
-const bookRoutes = require('./routes/bookRoutes');
-const userRoutes = require('./routes/userRoutes');
+const bookRoutes = require('./routes/book');
+const userRoutes = require('./routes/user');
 const path = require('path');
 
 dotenv.config();
