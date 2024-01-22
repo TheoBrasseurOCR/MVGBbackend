@@ -2,7 +2,6 @@ const sharp = require("sharp");
 const path = require("path");
 
 module.exports = (req, res, next) => {
-  //On vérifie si la requête contient un fichier et si ce dernier a un contenu binaire.
   if (req.file && req.file.buffer) {
     const name = req.file.originalname.split(" ").join("_");
     const extension = path.extname(name);
@@ -24,8 +23,7 @@ module.exports = (req, res, next) => {
             .json({ error: "Erreur lors de l'optimisation de l'image." });
         }
 
-        //On stocke le nom du fichier généré par Sharp dans req.sharpFileName (pour l'utiliser
-        //dans les controllers)
+        //On stocke le nom du fichier généré par Sharp dans req.sharpFileName
         req.sharpFileName = outputFileName;
 
         next();
