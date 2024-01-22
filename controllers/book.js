@@ -1,21 +1,33 @@
+const sharp = require('sharp');
+const path = require('path');
 const Book = require('../models/book');
 const fs = require('fs');
 
-exports.createBook = (req, res, next) => {
+exports.createBook = (req, res) => {
+  //On transforme les données du corps de la requête en objet JSON dont on pourra extraire les données
+  //facilement.
   const bookObject = JSON.parse(req.body.book);
+  //On supprime le champ _id généré par MongoDB.
   delete bookObject._id;
-  delete bookObject._userId;
+  //On crée donc un livre en récupérant toutes les infos du corps de la requête et en lui attribuant l'ID
+  //de l'utilisateur qui l'a crée, et on crée une URL pour l'image chargée.
   const book = new Book({
     ...bookObject,
     userId: req.auth.userId,
-    imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+    imageUrl: `${req.protocol}://${req.get("host")}/images/${
+      req.sharpFileName
+    }`,
   });
 
-  book.save()
-    .then(() => { res.status(201).json({ message: 'Objet enregistré !' }) })
-    .catch(error => { res.status(400).json({ error }) });
+  book
+    .save()
+    .then(() => {
+      res.status(201).json({ message: "Livre enregistré !" });
+    })
+    .catch((error) => {
+      res.status(400).json({ error });
+    });
 };
-
 exports.getAllBook = (req, res, next) => {
   Book.find()
     .then(book => res.status(200).json(book))
