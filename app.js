@@ -1,6 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const dotenv = require('dotenv'); // Ajoute cette ligne
+const dotenv = require('dotenv');
 const fs = require('fs');
 dotenv.config(); // Charge les variables d'environnement depuis le fichier .env
 
