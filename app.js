@@ -9,8 +9,6 @@ const bookRoutes = require('./routes/book');
 const userRoutes = require('./routes/user');
 const path = require('path');
 
-dotenv.config();
-
 // Si le fichier .env.local existe, il écrase les valeurs par défaut
 const envLocalPath = '.env.local';
 if (fs.existsSync(envLocalPath)) {

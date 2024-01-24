@@ -35,7 +35,10 @@ exports.getAllBook = (req, res, next) => {
 
 exports.getOneBook = (req, res, next) => {
   Book.findOne({ _id: req.params.id })
-    .then((books) => res.status(200).json(books))
+    .then((books) => {
+      if (!books) return res.status(404).json({ message: "Book not found" });
+      return res.status(200).json(books)
+    })
     .catch((error) => res.status(404).json({ error }));
 };
 
@@ -45,20 +48,10 @@ exports.modifyBook = async (req, res, next) => {
       ? {
           ...JSON.parse(req.body.book),
           imageUrl: `${req.protocol}://${req.get("host")}/images/${
-            req.file.filename
+            req.sharpFileName
           }`,
         }
       : { ...req.body };
-
-    // Utilisez sharp pour traiter l'image
-    if (req.file) {
-      const imageBuffer = await sharp(req.file.buffer)
-        .resize({ width: 300, height: 400 }) // Ajustez la taille selon vos besoins
-        .toBuffer();
-
-      // Enregistrez l'image traitée
-      await fs.writeFile(`images/${req.file.filename}`, imageBuffer);
-    }
 
     // Mettez à jour le livre dans la base de données
     const updatedBook = await Book.findOneAndUpdate(
